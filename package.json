@@ -1,0 +1,24 @@
+{
+  "name": "bamazon-mysql",
+  "version": "1.0.0",
+  "description": "I am currently a student in the UT Austin Coding Bootcamp. after spending a few months on client-side development, we are beginning to learn about the back-end. Our week 14 assignment is to create a command line node app that utilizes a mySQL database. The app will take in orders from customers and deplete stock from the store's inventory.",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nicolejeanne/bamazon-mysql.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nicolejeanne/bamazon-mysql/issues"
+  },
+  "homepage": "https://github.com/Nicolejeanne/bamazon-mysql#readme",
+  "dependencies": {
+    "inquirer": "^6.2.0",
+    "mysql": "^2.16.0"
+  }
+}

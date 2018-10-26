@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var cTable = require("console.table");
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -17,7 +18,7 @@ var connection = mysql.createConnection({
 });
 
 // connect to the mysql server and sql database
-connection.connect(function (err) {
+connection.connect(function(err) {
   if (err) throw err;
   // run the displayAllItems function after the connection is made to show the user all the products
   start();
@@ -25,6 +26,9 @@ connection.connect(function (err) {
 
 // function which prompts the user to display items for sale
 function start() {
+  console.log("------------------------------------------------------");
+  console.log("************ Welcome to my Bamazon Store! ************");
+  console.log("------------------------------------------------------");
   inquirer
     .prompt({
       name: "showItems",
@@ -32,41 +36,122 @@ function start() {
       message: "Would you like to see all items available for sale?",
       default: true
     })
-    .then(function (answer) {
+    .then(function(answer) {
       // based on their answer, either show the items or show goodbye message
       if (answer.showItems === true) {
         displayAllItems();
       } else {
-        console.log("Sorry you don't feel like shopping! Try again later!")
+        console.log("Sorry you don't feel like shopping! Try again later!");
       }
     });
 }
 
 function displayAllItems() {
-  connection.query("SELECT * FROM products", function(err, res) {
-    if (err) throw err;
-    console.log(res);
-    connection.end();
-    howMany();
-  });
-  
+  connection.query(
+    "SELECT item_id, product_name, price FROM products;",
+    function(err, res) {
+      if (err) throw err;
+      console.table(res);
+      whichProduct();
+    }
+  );
 }
-/*
-function howMany() {
+
+function whichProduct() {
+  inquirer
+    .prompt(
+      {
+        name: "whichProductToBuy",
+        type: "input",
+        message: "Which product ID would you like to purchase?",
+        validate: function(value) {
+          if (
+            isNaN(value) === false &&
+            parseInt(value) > 0 &&
+            parseInt(value) <= 10
+          ) {
+            return true;
+          }
+          return "Please enter a valid prodcut ID";
+        }
+      },
+      {
+        name: "qtyToBuy",
+        type: "input",
+        message: "How many of the item you would like to purchase?",
+        validate: function(value) {
+          if (isNAN(value) === false) {
+            return true;
+          }
+          return "Please enter a valid quantity";
+        }
+      }
+    )
+    .then(function(answer) {
+      /*console log user choice
+      console.log(
+        "You have chosen: \n Product to buy = " +
+          answer.whichProductToBuy +
+          "\n Quantity = " +
+          answer.qtyToBuy
+      );
+      makeTransaction(answer.whichProductToBuy, answer.qtyToBuy);
+    });
+
+  function makeTransaction(product_name, stock_quantity) {*/
+      connection.query(
+        "SELECT * FROM products WHERE item_id = ?",
+        [answer.whichProductToBuy],
+        function(err, res) {
+          if (err) throw err;
+          else if (answer.qtyToBuy > res[0].stock_quantity) {
+            console.log("Insufficient quantity in stock");
+            console.log("This order has been cancelled!");
+            newOrder();
+          } else {
+            let orderTotal = answer.qtyToBuy * res[0].price;
+            console.log("Thank you for your order");
+            console.log("Your order total is $" + orderTotal);
+            console.log(
+              "The " +
+                res[0].department_name +
+                " department will begin processing your order immediately!"
+            );
+
+            // Update SQL table
+            connection.query(
+              "UPDATE products SET ? WHERE ?",
+              [
+                { stock_quantity: res[0].stock_quantity - answer.qtyToBuy },
+                {
+                  item_id: answer.whichProductToBuy
+                }
+              ],
+              function(err, res) {
+                if (err) throw err;
+                newOrder();
+              }
+            );
+          }
+        }
+      );
+    });
+}
+
+//Allows the user to place a new order or end the connection
+function newOrder() {
   inquirer
     .prompt({
-      name: "qtyToBuy",
-      type: "input",
-      message: "How many of the item you would like to purchase?",
+      type: "confirm",
+      name: "choice",
+      message: "Would you like to place another order?"
     })
-    .then(function (answer) {
-      // based on their answer, either show the items or show goodbye message
-      if (answer is not available) {
-        console.log("Insufficient quantity in stock!");
-      } else {
-        // update database
-        // show the customer the total of their purchase
-        console.log("Thanks for your purchase!")
+    .then(function(answer) {
+      if (answer.choice === true) {
         start();
+      } else {
+        console.log("Thank you for shopping at Bamazon!");
+        connection.end();
       }
-    });*/
+    });
+}

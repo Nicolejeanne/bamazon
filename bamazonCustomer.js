@@ -46,7 +46,7 @@ function start() {
       }
     });
 }
-
+// function to display all items in a table
 function displayAllItems() {
   connection.query(
     "SELECT item_id, product_name, price FROM products;",
@@ -57,7 +57,7 @@ function displayAllItems() {
     }
   );
 }
-
+// function to inquire about which product and how many to purchase
 function whichProduct() {
   inquirer
     .prompt([
@@ -88,6 +88,7 @@ function whichProduct() {
         }
       }
     ])
+    // Depending on the user response, either show insufficient quantity or ordered message
     .then(function(answer) {
       connection.query(
         "SELECT * FROM products WHERE item_id = ?",

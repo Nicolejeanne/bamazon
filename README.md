@@ -21,7 +21,7 @@ I am currently a student in the UT Austin Coding Bootcamp. after spending a few 
        - password: "",
        - database: "bamazon_DB"
 
-   - You will then need to open the `bamazonSchema` file in MySQL Workbench and press the lightning button att he top left to create the database.
+   - You will then need to open the `bamazonSchema` file in MySQL Workbench and press the lightning button at the top left to create the database.
 
 3. You will also need a few Node packages for this all to work. From the root folder for this app in your command line, install the following:
 

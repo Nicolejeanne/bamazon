@@ -62,8 +62,8 @@ I am currently a student in the UT Austin Coding Bootcamp. after spending a few 
 
      Here is how it will look:
 
-   ![Image of ??](/images/spotify.png)
+   ![Image of app running full single order then finishing](/images/bamazonprocess.png)
 
-   ![Image of ??](/images/movie.png)
+   ![Image of app running full single order then starting second order](/images/bamazonprocess1.png)
 
-   ![Image of ??](/images/DoIt.png)
+   ![Image of app exiting after first inquiry](/images/bamazonprocess2.png)

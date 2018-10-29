@@ -67,3 +67,5 @@ I am currently a student in the UT Austin Coding Bootcamp. after spending a few 
    ![Image of app running full single order then starting second order](/images/bamazonprocess1.png)
 
    ![Image of app exiting after first inquiry](/images/bamazonprocess2.png)
+
+   ![Image of app if insufficient stock available](/images/bamazonprocess3.png)

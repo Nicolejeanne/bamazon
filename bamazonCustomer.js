@@ -42,10 +42,11 @@ function start() {
         displayAllItems();
       } else {
         console.log("Sorry you don't feel like shopping! Try again later!");
+        connection.end();
       }
     });
 }
-
+// function to display all items in a table
 function displayAllItems() {
   connection.query(
     "SELECT item_id, product_name, price FROM products;",
@@ -56,10 +57,10 @@ function displayAllItems() {
     }
   );
 }
-
+// function to inquire about which product and how many to purchase
 function whichProduct() {
   inquirer
-    .prompt(
+    .prompt([
       {
         name: "whichProductToBuy",
         type: "input",
@@ -72,44 +73,37 @@ function whichProduct() {
           ) {
             return true;
           }
-          return "Please enter a valid prodcut ID";
+          return false;
         }
       },
       {
         name: "qtyToBuy",
         type: "input",
-        message: "How many of the item you would like to purchase?",
+        message: "How many of the item would you like to purchase?",
         validate: function(value) {
-          if (isNAN(value) === false) {
+          if (isNaN(value) === false && parseInt(value) > 0) {
             return true;
           }
-          return "Please enter a valid quantity";
+          return false;
         }
       }
-    )
+    ])
+    // Depending on the user response, either show insufficient quantity or ordered message
     .then(function(answer) {
-      /*console log user choice
-      console.log(
-        "You have chosen: \n Product to buy = " +
-          answer.whichProductToBuy +
-          "\n Quantity = " +
-          answer.qtyToBuy
-      );
-      makeTransaction(answer.whichProductToBuy, answer.qtyToBuy);
-    });
-
-  function makeTransaction(product_name, stock_quantity) {*/
       connection.query(
         "SELECT * FROM products WHERE item_id = ?",
         [answer.whichProductToBuy],
         function(err, res) {
           if (err) throw err;
           else if (answer.qtyToBuy > res[0].stock_quantity) {
+            console.log("--------------------------")
             console.log("Insufficient quantity in stock");
             console.log("This order has been cancelled!");
+            console.log("--------------------------")
             newOrder();
           } else {
             let orderTotal = answer.qtyToBuy * res[0].price;
+            console.log("--------------------------")
             console.log("Thank you for your order");
             console.log("Your order total is $" + orderTotal);
             console.log(
@@ -117,6 +111,7 @@ function whichProduct() {
                 res[0].department_name +
                 " department will begin processing your order immediately!"
             );
+            console.log("--------------------------")
 
             // Update SQL table
             connection.query(
